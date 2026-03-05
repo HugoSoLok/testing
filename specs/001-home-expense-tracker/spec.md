@@ -9,11 +9,13 @@
 
 ### Session 2026-02-25
 
-- Q: How do you and your wife use the app — shared device, each on own device, or one person enters everything? → A: Each on their own device; data must sync so both people's records are visible together (requires shared backend or cloud storage).
+- Q: How do you and your wife use the app — shared device, each on own device, or one person enters everything? → A: Single shared device (MVP); one person manually logs expenses for both household members, tagging who paid each expense.
 - Q: Should the field identifying who paid an expense be labelled "Payee", "Paid by", or something else? → A: "Paid by" — rename the field everywhere to "Paid by".
-- Q: What authentication mechanism should be used so both family members access the same shared data? → A: Shared household PIN / passphrase — one secret for the whole household; anyone who enters it on first launch joins and sees the shared data.
 - Q: Where does the pie chart appear on the Expense page — same scrollable page, a toggle/tab, or above the list? → A: Toggle / tab within the Expense page — "List" and "Chart" views switchable via a tab/toggle; both reflect the same displayed month.
-- Q: Should the app update automatically when the other person adds an expense, or is fetching fresh data on open/navigation sufficient? → A: Refresh on open / month change — data is fetched from the server when the app opens and when navigating between months; no real-time push required.
+
+### Session 2026-03-04
+
+- Q: Should cross-device sync be required? → A: No — descoped for MVP. Single-device, local-first storage (IndexedDB via Dexie.js). No backend server, no authentication, no network required.
 
 ---
 
@@ -25,14 +27,13 @@ A family member opens the app and sees this month's expenses. They tap the float
 
 **Why this priority**: Recording expenses is the single most-used action in the app and is the foundation for everything else. Without it, no other story has any data to work with.
 
-**Independent Test**: Open the app, tap the new-record button, fill in the required fields (amount, category, payee, date), submit. The expense record appears in the current-month list with the correct category icon and amount. Data persists after refreshing the browser.
+**Independent Test**: Open the app, tap the new-record button, fill in the required fields (amount, category, Paid by, date), submit. The expense record appears in the current-month list with the correct category icon and amount. Data persists after refreshing the browser.
 
 **Acceptance Scenarios**:
 
 1. **Given** the Expense page is open, **When** the user taps the "+" floating button, **Then** a form popup appears with fields: amount (required), category (required, dropdown), Paid by (required, dropdown of configured family members), date (required, defaults to today), and description (optional free text).
 2. **Given** the new-record form is open, **When** the user submits a valid record, **Then** the popup closes, the record appears at the correct position in the month list showing the category colour icon and amount, and the monthly total updates immediately.
 3. **Given** the new-record form is open, **When** the user submits without filling required fields (amount, category, Paid by, or date), **Then** validation messages are shown and the form is not submitted.
-- **Given** a record has been added on one device, **When** the other family member opens the app on their own device, **Then** the record is visible to them (cross-device sync).
 
 ---
 
@@ -97,13 +98,13 @@ On the Expense page, the user taps the "Chart" tab or toggle (alongside the "Lis
 On the Expense page, the user taps the "Split" floating button in the bottom-left corner. A popup appears showing:
 
 - Each family member's name, how much they have already paid (sum of expenses where they are recorded as Paid by), and their equal fair share of the month's total.
-- A clear net-settlement line stating who needs to pay whom and how much (e.g., "Wife pays Me $50") so the couple can settle up instantly.
+- A clear net-settlement line stating who needs to pay whom and how much (e.g., "MM pays Hugo $50") so the couple can settle up instantly.
 
 The fair share is calculated as the month's total ÷ number of members. The net settlement is determined by comparing each member's actual payments against their fair share; the member who underpaid transfers the difference to the member who overpaid.
 
 **Why this priority**: The couple needs an instant, no-friction way to see how much each person owes for the month, which is the main operational outcome of tracking shared expenses.
 
-**Independent Test**: Record three expenses — Me pays $200, Wife pays $100 (monthly total $300 with 2 members, fair share $150 each). Tap Split — the popup must show Me paid $200 (overpaid by $50), Wife paid $100 (underpaid by $50), settlement: "Wife pays Me $50".
+**Independent Test**: Record three expenses — Hugo pays $200, MM pays $100 (monthly total $300 with 2 members, fair share $150 each). Tap Split — the popup must show Hugo paid $200 (overpaid by $50), MM paid $100 (underpaid by $50), settlement: "MM pays Hugo $50".
 
 **Acceptance Scenarios**:
 
@@ -169,10 +170,7 @@ On the Setup page, under the "Family Members" sub-tab, the user can see all conf
 - **FR-001**: Users MUST be able to create an expense record containing: amount (required, positive number), category (required, chosen from configured list), Paid by (required, chosen from configured family members — the person who covered this expense), date (required, defaults to today), and description (optional free text). Item name is not a required field.
 - **FR-002**: Users MUST be able to edit any field of an existing expense record.
 - **FR-003**: Users MUST be able to delete an existing expense record after a confirmation step.
-- **FR-004**: All expense data MUST be stored in a shared backend or cloud data store so that records entered by either family member on their own device are immediately visible to the other.
-- **FR-004a**: On first launch (or when no household session exists), the app MUST present a PIN / passphrase entry screen. Entering the correct household PIN grants access to the shared data; an incorrect PIN MUST show an error and not grant access.
-- **FR-004b**: The household PIN MUST be set once (by the first person to launch the app) and stored server-side in hashed form. The plain-text PIN MUST NOT be stored on the device or transmitted after initial authentication.
-- **FR-004c**: The app MUST maintain a persistent authenticated session on the device so the PIN does not need to be re-entered on every visit; the session MUST expire or be clearable (e.g., a "Sign out" option in Setup).
+- **FR-004**: All expense data MUST be stored locally in the browser using IndexedDB so that records persist across sessions on the same device and browser.
 
 **Expense List & Navigation**
 - **FR-005**: The Expense page MUST default to the current calendar month on every launch.
@@ -187,7 +185,7 @@ On the Setup page, under the "Family Members" sub-tab, the user can see all conf
 
 **Split-Even Calculator**
 - **FR-012**: A floating "Split" button MUST always be visible on the Expense page (bottom-left overlay).
-- **FR-013**: Tapping the Split button MUST open a popup displaying: (a) each configured family member's name, their actual paid amount for the month (sum of expenses where they are recorded as Paid by), and their fair share (total ÷ number of members); (b) a net-settlement result stating which member owes how much to which other member, or "All settled" if no transfer is needed. All amounts MUST be rounded to two decimal places.
+- **FR-013**: Tapping the Split button MUST open a popup displaying: (a) each configured family member's name, their actual paid amount for the month (sum of expenses where they are recorded as Paid by), and their fair share (total ÷ number of members); (b) a net-settlement result stating which member owes how much to which other member, or "All settled" if no transfer is needed. All amounts MUST be displayed as `$X.XX` (fixed `$` prefix, two decimal places, e.g. `$12.50`).
 
 **New Record Entry**
 - **FR-014**: A floating new-record "+" button MUST always be visible on the Expense page (bottom-right overlay).
@@ -207,7 +205,7 @@ On the Setup page, under the "Family Members" sub-tab, the user can see all conf
 - **FR-022**: The application MUST have exactly two pages: Expense and Setup.
 - **FR-023**: The Setup page MUST contain two sub-tabs: "Family Members" and "Categories".
 - **FR-024**: The application MUST be designed for and function correctly on a mobile-sized viewport (320 px – 480 px wide).
-- **FR-025**: The app MUST fetch the latest data from the server each time it is opened (or foregrounded) and each time the user navigates to a different month. No real-time push or background polling is required; a manual pull-to-refresh gesture on the expense list is a SHOULD-have convenience.
+- **FR-025**: All data reads MUST be served from local IndexedDB. No network requests are made for data; the app works fully offline after initial load.
 
 ### Key Entities
 
@@ -217,13 +215,13 @@ On the Setup page, under the "Family Members" sub-tab, the user can see all conf
 
 ## Assumptions
 
-- **Data storage & authentication**: Data is stored in a shared backend or cloud data store (e.g., a hosted database or BaaS such as Firebase/Supabase). Both family members access the same data set from their own devices. Access is gated by a single shared household PIN / passphrase — set on first launch and shared between household members out-of-band (e.g., verbally). The PIN is stored server-side in hashed form; a persistent session token is kept on each device so the PIN is only entered once per device. Full individual user account management (registration, email verification, password reset) is out of scope for this version.
-- **Family members**: Two family members (e.g., "Me" and "Wife") are pre-seeded as defaults on first launch. The user can rename or replace them.
+- **Data storage**: All data is stored locally in the browser's IndexedDB (via Dexie.js). No backend server, no authentication, and no network connectivity are required for the app to function. Data is scoped to the origin and browser; it is not shared across devices or browsers. Cross-device sync is out of scope for this MVP version.
+- **Family members**: Two family members ("Hugo" and "MM") are pre-seeded as defaults on first launch. The user can rename or replace them.
 - **Split-even logic**: The split is always equal — each configured member's fair share is (total ÷ count). The calculator also computes net settlement by comparing each member's actual payments (as payee) against their fair share, then produces a single transfer instruction (or "All settled") to resolve any imbalance. Weighted or custom splits are out of scope. For more than two members the popup shows each member's net balance; full multi-way optimised settlement (minimising number of transfers) is out of scope for this version.
-- **Currency**: A single currency is used throughout; the app displays amounts with two decimal places. Currency symbol configuration is out of scope for this version.
+- **Currency**: A single currency is used throughout; all monetary amounts are displayed with a `$` prefix and two decimal places, e.g. `$12.50`. The `$` symbol is fixed — currency symbol configuration is out of scope for this version.
 - **Amount field**: "Unit price" is interpreted as the total expense amount for the record (not a per-unit price multiplied by a quantity). This simplifies the input form.
-- **Default categories**: A small set of starter categories (e.g., Food, Transport, Utilities, Shopping, Other) is pre-seeded on first launch so the app is immediately usable.
-- **Sync strategy**: The app fetches fresh data from the shared backend when it is opened and when the user navigates to a different month. Real-time push updates (WebSocket, server-sent events) are out of scope. A pull-to-refresh gesture on the expense list is a recommended convenience but not required.
+- **Default categories**: Seven starter categories (Food, Transport, Utilities, Shopping, Health, Entertainment, Other) are pre-seeded on first launch so the app is immediately usable.
+- **Sync strategy**: Not applicable for MVP. All data is local. A future version may add cloud sync; the data model is designed to accommodate this without schema changes.
 
 ## Success Criteria *(mandatory)*
 
