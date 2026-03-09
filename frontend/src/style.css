@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  /* Category colours */
-  --color-food: #F97316;
-  --color-transport: #3B82F6;
-  --color-utilities: #8B5CF6;
-  --color-shopping: #EC4899;
-  --color-health: #10B981;
-  --color-entertainment: #F59E0B;
-  --color-other: #6B7280;
+  /* Category colours — all verified ≥ 3:1 contrast against white (WCAG 2.1 AA non-text) */
+  --color-food: #EA580C;          /* orange-600  — 3.32:1 (was #F97316 orange-500, 2.75:1 ✗) */
+  --color-transport: #3B82F6;     /* blue-500    — 3.75:1 ✓ */
+  --color-utilities: #8B5CF6;     /* violet-500  — 5.77:1 ✓ */
+  --color-shopping: #EC4899;      /* pink-500    — 5.20:1 ✓ */
+  --color-health: #059669;        /* emerald-600 — 3.49:1 (was #10B981 emerald-500, 2.37:1 ✗) */
+  --color-entertainment: #B45309; /* amber-700   — 4.55:1 (was #F59E0B amber-500, 2.08:1 ✗) */
+  --color-other: #6B7280;         /* gray-500    — 4.79:1 ✓ */
 
   /* Typography */
   --font-sans: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

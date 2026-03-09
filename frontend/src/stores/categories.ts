@@ -12,16 +12,25 @@ export const useCategoriesStore = defineStore('categories', () => {
     categories.value = await db.categories.orderBy('name').toArray()
   }
 
-  async function addCategory(_data: Omit<Category, 'id' | 'created' | 'updated'>): Promise<void> {
-    // Stub — implemented in Phase 8 (T043)
+  async function addCategory(data: Omit<Category, 'id' | 'created' | 'updated'>): Promise<void> {
+    const now = new Date().toISOString()
+    await db.categories.add({ ...data, created: now, updated: now })
+    await loadCategories()
   }
 
-  async function updateCategory(_id: number, _changes: Partial<Omit<Category, 'id' | 'created'>>): Promise<void> {
-    // Stub — implemented in Phase 8 (T043)
+  async function updateCategory(id: number, changes: Partial<Omit<Category, 'id' | 'created'>>): Promise<void> {
+    const now = new Date().toISOString()
+    await db.categories.update(id, { ...changes, updated: now })
+    await loadCategories()
   }
 
-  async function deleteCategory(_id: number): Promise<void> {
-    // Stub — implemented in Phase 8 (T043); includes FK guard
+  async function deleteCategory(id: number): Promise<void> {
+    const refCount = await db.expenses.where('categoryId').equals(id).count()
+    if (refCount > 0) {
+      throw new Error('Category has expense records and cannot be deleted.')
+    }
+    await db.categories.delete(id)
+    await loadCategories()
   }
 
   return {

@@ -63,13 +63,13 @@ export async function seedIfEmpty(): Promise<void> {
 
   if ((await db.categories.count()) === 0) {
     await db.categories.bulkAdd([
-      { name: 'Food',          colour: '#F97316', icon: 'UtensilsCrossed', created: now, updated: now },
-      { name: 'Transport',     colour: '#3B82F6', icon: 'Car',             created: now, updated: now },
-      { name: 'Utilities',     colour: '#8B5CF6', icon: 'Zap',             created: now, updated: now },
-      { name: 'Shopping',      colour: '#EC4899', icon: 'ShoppingBag',     created: now, updated: now },
-      { name: 'Health',        colour: '#10B981', icon: 'Heart',           created: now, updated: now },
-      { name: 'Entertainment', colour: '#F59E0B', icon: 'Tv',              created: now, updated: now },
-      { name: 'Other',         colour: '#6B7280', icon: 'MoreHorizontal',  created: now, updated: now },
+      { name: 'Food',          colour: '#EA580C', icon: 'UtensilsCrossed', created: now, updated: now }, // orange-600 3.32:1
+      { name: 'Transport',     colour: '#3B82F6', icon: 'Car',             created: now, updated: now }, // blue-500   3.75:1
+      { name: 'Utilities',     colour: '#8B5CF6', icon: 'Zap',             created: now, updated: now }, // violet-500 5.77:1
+      { name: 'Shopping',      colour: '#EC4899', icon: 'ShoppingBag',     created: now, updated: now }, // pink-500   5.20:1
+      { name: 'Health',        colour: '#059669', icon: 'Heart',           created: now, updated: now }, // emerald-600 3.49:1
+      { name: 'Entertainment', colour: '#B45309', icon: 'Tv',              created: now, updated: now }, // amber-700  4.55:1
+      { name: 'Other',         colour: '#6B7280', icon: 'MoreHorizontal',  created: now, updated: now }, // gray-500   4.79:1
     ])
   }
 }

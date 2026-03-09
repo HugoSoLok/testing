@@ -48,20 +48,35 @@ export const useExpensesStore = defineStore('expenses', () => {
     await loadExpenses(currentMonth.value)
   }
 
-  async function updateExpense(_id: number, _changes: Partial<Omit<Expense, 'id' | 'created'>>): Promise<void> {
-    // Stub — implemented in Phase 5 (T030)
+  async function updateExpense(id: number, changes: Partial<Omit<Expense, 'id' | 'created'>>): Promise<void> {
+    const update: Partial<Expense> = {
+      ...changes,
+      updated: new Date().toISOString(),
+    }
+    if (changes.date) {
+      update.month = changes.date.slice(0, 7)
+    }
+    await db.expenses.update(id, update)
+    await loadExpenses(currentMonth.value)
   }
 
-  async function deleteExpense(_id: number): Promise<void> {
-    // Stub — implemented in Phase 5 (T031)
+  async function deleteExpense(id: number): Promise<void> {
+    await db.expenses.delete(id)
+    await loadExpenses(currentMonth.value)
   }
 
-  function goToPreviousMonth(): void {
-    // Stub — implemented in Phase 4 (T026)
+  function shiftMonth(ym: string, delta: number): string {
+    const [y, m] = ym.split('-').map(Number)
+    const d = new Date(y, m - 1 + delta, 1)
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
   }
 
-  function goToNextMonth(): void {
-    // Stub — implemented in Phase 4 (T026)
+  async function goToPreviousMonth(): Promise<void> {
+    await loadExpenses(shiftMonth(currentMonth.value, -1))
+  }
+
+  async function goToNextMonth(): Promise<void> {
+    await loadExpenses(shiftMonth(currentMonth.value, +1))
   }
 
   return {

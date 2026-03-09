@@ -79,11 +79,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T025 [US2] Add `monthlyTotal` computed getter to `frontend/src/stores/expenses.ts` (sum of `amount` for current `expenses` list)
-- [ ] T026 [US2] Implement month navigation actions `goToPreviousMonth()` and `goToNextMonth()` in `frontend/src/stores/expenses.ts` (update `currentMonth`, re-run `loadExpenses`)
-- [ ] T027 [US2] Wire `@vueuse/core` `useSwipe` gesture on the expense list area in `ExpensePage.vue` — swipe right calls `goToPreviousMonth`, swipe left calls `goToNextMonth` in `frontend/src/pages/ExpensePage.vue`
-- [ ] T028 [US2] Add empty-state message (e.g., "No expenses this month") in `ExpenseList.vue` when expense list is empty in `frontend/src/components/expense/ExpenseList.vue`
-- [ ] T029 [US2] Display `monthlyTotal` prominently in `ExpensePage.vue` (always visible, formatted as `$X.XX`) in `frontend/src/pages/ExpensePage.vue`
+- [X] T025 [US2] Add `monthlyTotal` computed getter to `frontend/src/stores/expenses.ts` (sum of `amount` for current `expenses` list)
+- [X] T026 [US2] Implement month navigation actions `goToPreviousMonth()` and `goToNextMonth()` in `frontend/src/stores/expenses.ts` (update `currentMonth`, re-run `loadExpenses`)
+- [X] T027 [US2] Wire `@vueuse/core` `useSwipe` gesture on the expense list area in `ExpensePage.vue` — swipe right calls `goToPreviousMonth`, swipe left calls `goToNextMonth` in `frontend/src/pages/ExpensePage.vue`
+- [X] T028 [US2] Add empty-state message (e.g., "No expenses this month") in `ExpenseList.vue` when expense list is empty in `frontend/src/components/expense/ExpenseList.vue`
+- [X] T029 [US2] Display `monthlyTotal` prominently in `ExpensePage.vue` (always visible, formatted as `$X.XX`) in `frontend/src/pages/ExpensePage.vue`
 
 **Checkpoint**: Month navigation works with swipe and arrow taps; total updates on navigation; empty months show empty state
 
@@ -97,12 +97,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T030 [P] [US3] Implement `updateExpense(id, changes)` action in `frontend/src/stores/expenses.ts` (re-derive `month` if `date` changed, update `updated` timestamp)
-- [ ] T031 [P] [US3] Implement `deleteExpense(id)` action in `frontend/src/stores/expenses.ts`
-- [ ] T032 [US3] Implement `ExpenseDetail.vue` — Vant popup showing all expense fields (description row hidden when empty); "Edit" and "Delete" action buttons in `frontend/src/components/expense/ExpenseDetail.vue`
-- [ ] T033 [US3] Wire expense row tap in `ExpenseList.vue` to emit `select` event; handle in `ExpensePage.vue` to open `ExpenseDetail` with the selected expense in `frontend/src/components/expense/ExpenseList.vue`
-- [ ] T034 [US3] Wire "Edit" button in `ExpenseDetail.vue` to open `ExpenseForm` in edit mode (pre-filled with current values; form calls `updateExpense` on save) in `frontend/src/components/expense/ExpenseDetail.vue`
-- [ ] T035 [US3] Implement delete confirmation (`<van-dialog>` confirm prompt) in `ExpenseDetail.vue`; on confirm call `deleteExpense` and close popup; on cancel leave popup open in `frontend/src/components/expense/ExpenseDetail.vue`
+- [X] T030 [P] [US3] Implement `updateExpense(id, changes)` action in `frontend/src/stores/expenses.ts` (re-derive `month` if `date` changed, update `updated` timestamp)
+- [X] T031 [P] [US3] Implement `deleteExpense(id)` action in `frontend/src/stores/expenses.ts`
+- [X] T032 [US3] Implement `ExpenseDetail.vue` — Vant popup showing all expense fields (description row hidden when empty); "Edit" and "Delete" action buttons in `frontend/src/components/expense/ExpenseDetail.vue`
+- [X] T033 [US3] Wire expense row tap in `ExpenseList.vue` to emit `select` event; handle in `ExpensePage.vue` to open `ExpenseDetail` with the selected expense in `frontend/src/components/expense/ExpenseList.vue`
+- [X] T034 [US3] Wire "Edit" button in `ExpenseDetail.vue` to open `ExpenseForm` in edit mode (pre-filled with current values; form calls `updateExpense` on save) in `frontend/src/components/expense/ExpenseDetail.vue`
+- [X] T035 [US3] Implement delete confirmation (`<van-dialog>` confirm prompt) in `ExpenseDetail.vue`; on confirm call `deleteExpense` and close popup; on cancel leave popup open in `frontend/src/components/expense/ExpenseDetail.vue`
 
 **Checkpoint**: Full CRUD flow works — view detail, edit amount, delete with confirmation, cancel delete leaves record intact
 
@@ -116,9 +116,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T036 [P] [US4] Add `categoryBreakdown` computed getter to `frontend/src/stores/expenses.ts` returning `Map<categoryId, sum>` for the current expenses list
-- [ ] T037 [US4] Implement `CategoryPieChart.vue` — `vue-chartjs` `<Pie>` component; maps `categoryBreakdown` entries to labels, data, and `backgroundColor` colours from categories store; shows empty-state placeholder when breakdown is empty in `frontend/src/components/chart/CategoryPieChart.vue`
-- [ ] T038 [US4] Add List / Chart segmented toggle (Vant `<van-tabs>` or custom toggle) to `ExpensePage.vue`; conditionally renders `ExpenseList` or `CategoryPieChart`; floating action buttons ("+" and "Split") remain visible in both views in `frontend/src/pages/ExpensePage.vue`
+- [X] T036 [P] [US4] Add `categoryBreakdown` computed getter to `frontend/src/stores/expenses.ts` returning `Map<categoryId, sum>` for the current expenses list
+- [X] T037 [US4] Implement `CategoryPieChart.vue` — `vue-chartjs` `<Pie>` component; maps `categoryBreakdown` entries to labels, data, and `backgroundColor` colours from categories store; shows empty-state placeholder when breakdown is empty in `frontend/src/components/chart/CategoryPieChart.vue`
+- [X] T038 [US4] Add List / Chart segmented toggle (Vant `<van-tabs>` or custom toggle) to `ExpensePage.vue`; conditionally renders `ExpenseList` or `CategoryPieChart`; floating action buttons ("+" and "Split") remain visible in both views in `frontend/src/pages/ExpensePage.vue`
 
 **Checkpoint**: Switching to Chart view renders pie chart with correct colours; switching back shows the list; month navigation updates the chart; empty month shows placeholder not an empty canvas
 
@@ -132,10 +132,10 @@
 
 ### Implementation for User Story 5
 
-- [ ] T039 [P] [US5] Implement pure `calculateSplit(memberPaidMap, memberIds, total)` function in `frontend/src/lib/split.ts` returning per-member `{ name, paid, fairShare, balance }` and `settlement` string; write Vitest unit tests covering: 2-member normal case, all-settled case, 1-member edge case, zero-expense case in `frontend/tests/unit/split.test.ts`
-- [ ] T040 [P] [US5] Add `memberPaidTotals` computed getter to `frontend/src/stores/expenses.ts` returning `Map<memberId, sum>` for the current expenses list
-- [ ] T041 [US5] Implement `SplitPopup.vue` — Vant `<van-popup>` listing each member's name, paid amount, and fair share; net-settlement line in bold; all amounts formatted as `$X.XX` in `frontend/src/components/split/SplitPopup.vue`
-- [ ] T042 [US5] Add floating "Split" FAB (bottom-left overlay) to `ExpensePage.vue` that opens `SplitPopup` for the currently displayed month in `frontend/src/pages/ExpensePage.vue`
+- [X] T039 [P] [US5] Implement pure `calculateSplit(memberPaidMap, memberIds, total)` function in `frontend/src/lib/split.ts` returning per-member `{ name, paid, fairShare, balance }` and `settlement` string; write Vitest unit tests covering: 2-member normal case, all-settled case, 1-member edge case, zero-expense case in `frontend/tests/unit/split.test.ts`
+- [X] T040 [P] [US5] Add `memberPaidTotals` computed getter to `frontend/src/stores/expenses.ts` returning `Map<memberId, sum>` for the current expenses list
+- [X] T041 [US5] Implement `SplitPopup.vue` — Vant `<van-popup>` listing each member's name, paid amount, and fair share; net-settlement line in bold; all amounts formatted as `$X.XX` in `frontend/src/components/split/SplitPopup.vue`
+- [X] T042 [US5] Add floating "Split" FAB (bottom-left overlay) to `ExpensePage.vue` that opens `SplitPopup` for the currently displayed month in `frontend/src/pages/ExpensePage.vue`
 
 **Checkpoint**: Split popup shows correct figures; navigating months then re-opening shows figures for the new month; edge cases (0 expenses, 1 member) handled gracefully
 
@@ -149,9 +149,9 @@
 
 ### Implementation for User Story 6
 
-- [ ] T043 [P] [US6] Implement `addCategory()`, `updateCategory()`, `deleteCategory()` (with FK guard: check `expenses` reference count before delete and throw descriptive error) actions in `frontend/src/stores/categories.ts`
-- [ ] T044 [US6] Implement `CategorySetup.vue` — lists all categories with name, colour swatch, and Lucide icon; "Add" button opens an add/edit form popup (Vant popup sheet) with: name text field, colour picker (predefined hex palette), Lucide icon picker (scrollable grid of allowed icon names); delete swipe-action with FK guard error toast in `frontend/src/components/setup/CategorySetup.vue`
-- [ ] T045 [US6] Implement `SetupPage.vue` with Vant `<van-tabs>` sub-tabs "Family Members" and "Categories" rendering `MemberSetup` and `CategorySetup` in `frontend/src/pages/SetupPage.vue`
+- [X] T043 [P] [US6] Implement `addCategory()`, `updateCategory()`, `deleteCategory()` (with FK guard: check `expenses` reference count before delete and throw descriptive error) actions in `frontend/src/stores/categories.ts`
+- [X] T044 [US6] Implement `CategorySetup.vue` — lists all categories with name, colour swatch, and Lucide icon; "Add" button opens an add/edit form popup (Vant popup sheet) with: name text field, colour picker (predefined hex palette), Lucide icon picker (scrollable grid of allowed icon names); delete swipe-action with FK guard error toast in `frontend/src/components/setup/CategorySetup.vue`
+- [X] T045 [US6] Implement `SetupPage.vue` with Vant `<van-tabs>` sub-tabs "Family Members" and "Categories" rendering `MemberSetup` and `CategorySetup` in `frontend/src/pages/SetupPage.vue`
 
 **Checkpoint**: Category CRUD works; newly added category appears in expense form dropdown; categories with expenses show error on delete attempt; colour and icon reflect in expense rows immediately after edit
 
@@ -165,9 +165,9 @@
 
 ### Implementation for User Story 7
 
-- [ ] T046 [P] [US7] Implement `addMember()`, `updateMember()`, `deleteMember()` (with FK guard: check `expenses` reference count before delete and throw descriptive error) actions in `frontend/src/stores/members.ts`
-- [ ] T047 [US7] Implement `MemberSetup.vue` — lists all members by name; "Add" button opens a name input popup; inline rename on tap; delete swipe-action with FK guard error toast in `frontend/src/components/setup/MemberSetup.vue`
-- [ ] T048 [US7] Wire `MemberSetup` into `SetupPage.vue` "Family Members" sub-tab in `frontend/src/pages/SetupPage.vue`
+- [X] T046 [P] [US7] Implement `addMember()`, `updateMember()`, `deleteMember()` (with FK guard: check `expenses` reference count before delete and throw descriptive error) actions in `frontend/src/stores/members.ts`
+- [X] T047 [US7] Implement `MemberSetup.vue` — lists all members by name; "Add" button opens a name input popup; inline rename on tap; delete swipe-action with FK guard error toast in `frontend/src/components/setup/MemberSetup.vue`
+- [X] T048 [US7] Wire `MemberSetup` into `SetupPage.vue` "Family Members" sub-tab in `frontend/src/pages/SetupPage.vue`
 
 **Checkpoint**: Member CRUD works; new members appear in expense form "Paid by" dropdown; members with expense records show error on delete attempt; renamed members update all referencing expense display
 
@@ -177,12 +177,12 @@
 
 **Purpose**: PWA offline support, e2e tests, performance validation, accessibility, and quickstart verification.
 
-- [ ] T049 [P] Add PWA manifest (`frontend/public/manifest.webmanifest`) and configure `vite-plugin-pwa` for offline-capable service worker in `frontend/vite.config.ts`; verify installable on mobile Chrome
-- [ ] T050 [P] Write Playwright e2e test: add expense → verify in list → edit amount → verify updated → delete → verify removed + total updated in `frontend/tests/e2e/expense.spec.ts`
-- [ ] T051 [P] Write Playwright e2e test: seed Hugo $200 + MM $100 → open split popup → assert settlement "MM pays Hugo $50.00" in `frontend/tests/e2e/split.spec.ts`
-- [ ] T052 Audit WCAG 2.1 AA colour contrast on all 7 seed category colours + Vant component usage; fix any violations in `frontend/src/style.css` or component CSS
-- [ ] T053 Run Lighthouse CI audit against production build; verify TTI ≤ 3 s and list + chart render < 1 s (SC-002); address any regressions in `frontend/`
-- [ ] T054 Run full quickstart.md validation: `npm install` → `npm run dev` → `npm run build` → `npm run preview` → `npm run test:unit` → `npm run test:e2e`; fix any failures
+- [X] T049 [P] Add PWA manifest (`frontend/public/manifest.webmanifest`) and configure `vite-plugin-pwa` for offline-capable service worker in `frontend/vite.config.ts`; verify installable on mobile Chrome
+- [X] T050 [P] Write Playwright e2e test: add expense → verify in list → edit amount → verify updated → delete → verify removed + total updated in `frontend/tests/e2e/expense.spec.ts`
+- [X] T051 [P] Write Playwright e2e test: seed Hugo $200 + MM $100 → open split popup → assert settlement "MM pays Hugo $50.00" in `frontend/tests/e2e/split.spec.ts`
+- [X] T052 Audit WCAG 2.1 AA colour contrast on all 7 seed category colours + Vant component usage; fix any violations in `frontend/src/style.css` or component CSS
+- [X] T053 Run Lighthouse CI audit against production build; verify TTI ≤ 3 s and list + chart render < 1 s (SC-002); address any regressions in `frontend/`
+- [X] T054 Run full quickstart.md validation: `npm install` → `npm run dev` → `npm run build` → `npm run preview` → `npm run test:unit` → `npm run test:e2e`; fix any failures
 
 ---
 

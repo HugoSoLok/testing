@@ -8,8 +8,11 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
+    "test": "vitest run",
     "test:unit": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@vueuse/core": "^12.8.2",
@@ -37,6 +40,7 @@
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.56.1",
     "vite": "^6.0.5",
+    "vite-plugin-pwa": "^1.2.0",
     "vitest": "^3.2.4",
     "vue-tsc": "^2.2.0"
   }

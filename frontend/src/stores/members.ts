@@ -12,16 +12,25 @@ export const useMembersStore = defineStore('members', () => {
     members.value = await db.members.orderBy('name').toArray()
   }
 
-  async function addMember(_data: Pick<Member, 'name'>): Promise<void> {
-    // Stub — implemented in Phase 9 (T046)
+  async function addMember(data: Pick<Member, 'name'>): Promise<void> {
+    const now = new Date().toISOString()
+    await db.members.add({ name: data.name, created: now, updated: now })
+    await loadMembers()
   }
 
-  async function updateMember(_id: number, _changes: Pick<Member, 'name'>): Promise<void> {
-    // Stub — implemented in Phase 9 (T046)
+  async function updateMember(id: number, changes: Pick<Member, 'name'>): Promise<void> {
+    const now = new Date().toISOString()
+    await db.members.update(id, { name: changes.name, updated: now })
+    await loadMembers()
   }
 
-  async function deleteMember(_id: number): Promise<void> {
-    // Stub — implemented in Phase 9 (T046); includes FK guard
+  async function deleteMember(id: number): Promise<void> {
+    const refCount = await db.expenses.where('paidBy').equals(id).count()
+    if (refCount > 0) {
+      throw new Error('Member has expense records and cannot be removed.')
+    }
+    await db.members.delete(id)
+    await loadMembers()
   }
 
   return {
