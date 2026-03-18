@@ -101,6 +101,12 @@ async function handleDelete(cat: Category) {
   }
 }
 
+function closePopup() {
+  showPopup.value = false
+}
+
+defineExpose({ closePopup })
+
 onMounted(() => {
   store.loadCategories()
 })
@@ -169,22 +175,27 @@ onMounted(() => {
   </div>
 
   <!-- ── Add / Edit popup ──────────────────────────────────────────────────── -->
+  <!-- Teleport escapes the van-tabs CSS transform ancestor so position:fixed
+       is correctly anchored to the viewport (not the translated tab panel) -->
+  <Teleport to="body">
   <van-popup
     v-model:show="showPopup"
     position="bottom"
     round
-    :style="{ maxHeight: '85vh', overflowY: 'auto' }"
+    :style="{ maxHeight: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }"
   >
-    <div class="popup-content">
-      <div class="popup-header">
-        <span class="popup-title">{{ editingId !== null ? 'Edit Category' : 'Add Category' }}</span>
-        <van-icon
-          name="cross"
-          class="popup-close"
-          @click="showPopup = false"
-        />
-      </div>
+    <!-- Sticky header -->
+    <div class="popup-header">
+      <span class="popup-title">{{ editingId !== null ? 'Edit Category' : 'Add Category' }}</span>
+      <van-icon
+        name="cross"
+        class="popup-close"
+        @click="showPopup = false"
+      />
+    </div>
 
+    <!-- Scrollable body -->
+    <div class="popup-body">
       <!-- Name field -->
       <van-field
         v-model="form.name"
@@ -243,23 +254,25 @@ onMounted(() => {
         </span>
         <span class="preview-name">{{ form.name || '—' }}</span>
       </div>
+    </div>
 
-      <div class="popup-actions">
-        <van-button
-          plain
-          @click="showPopup = false"
-        >
-          Cancel
-        </van-button>
-        <van-button
-          type="primary"
-          @click="handleSave"
-        >
-          Save
-        </van-button>
-      </div>
+    <!-- Sticky footer actions -->
+    <div class="popup-actions">
+      <van-button
+        plain
+        @click="showPopup = false"
+      >
+        Cancel
+      </van-button>
+      <van-button
+        type="primary"
+        @click="handleSave"
+      >
+        Save
+      </van-button>
     </div>
   </van-popup>
+  </Teleport>
 </template>
 
 <style scoped>
@@ -294,17 +307,22 @@ onMounted(() => {
   height: 100%;
 }
 
-/* Popup */
-.popup-content {
-  padding: 16px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-}
-
+/* Popup layout — sticky header + scrollable body + sticky footer */
 .popup-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  padding: 16px 16px 12px;
+  flex-shrink: 0;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  z-index: 1;
+}
+
+.popup-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .popup-title {
@@ -395,11 +413,14 @@ onMounted(() => {
   color: #323233;
 }
 
-/* Popup actions */
+/* Popup actions — sticky footer */
 .popup-actions {
   display: flex;
   gap: 12px;
-  padding-top: 16px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
 }
 
 .popup-actions .van-button {

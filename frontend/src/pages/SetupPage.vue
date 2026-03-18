@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import CategorySetup from '@/components/setup/CategorySetup.vue'
 import MemberSetup from '@/components/setup/MemberSetup.vue'
 
 const activeTab = ref('members')
+const categorySetupRef = ref<InstanceType<typeof CategorySetup> | null>(null)
+
+// Close any open popup when the user switches tabs
+watch(activeTab, () => {
+  categorySetupRef.value?.closePopup()
+})
 </script>
 
 <template>
@@ -23,7 +29,7 @@ const activeTab = ref('members')
         title="Categories"
         name="categories"
       >
-        <CategorySetup />
+        <CategorySetup ref="categorySetupRef" />
       </van-tab>
     </van-tabs>
   </div>
